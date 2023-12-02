@@ -1,0 +1,19 @@
+ScreenManager:
+    id: screen_manager
+    Screen:
+        name: "home"
+        MDTextButton:
+            text: 'NeonSmartChain'
+            pos_hint: {"center_x": .5, "center_y": .85}
+            font_size: '40sp'
+        MDTextField:
+            hint_text: "Ведите через пробел 12 кодов"
+            mode: "rectangle"
+            pos_hint: {"center_x": .5, "center_y": .7}
+            size_hint: .85, .08
+        MDRaisedButton:
+            text: "Загрузить из .pem файла"
+            pos_hint: {"center_x": .5, "center_y": .6}
+            on_release:
+                app.open_file_manager
+
