@@ -1,45 +1,95 @@
-from kivymd.app import MDApp
-from kivymd.uix.button import MDRaisedButton
-from kivymd.uix.filemanager import MDFileManager
 from kivy.lang import Builder
-from kivy.core.window import Window
+from kivy.properties import StringProperty
+from kivy.uix.screenmanager import Screen
 
-Window.size = (400, 600)
-
-KV = '''
-        BoxLayout:
-            orientation: 'vertical'
-            MDToolbar:
-                title: "Choose File"
-            MDRaisedButton:
-                id: choose_file_button
-                text: "Choose file"
-                pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-        '''
+from kivymd.icon_definitions import md_icons
+from kivymd.app import MDApp
+from kivymd.uix.list import OneLineIconListItem
 
 
-class MyApp(MDApp):
+Builder.load_string(
+    '''
+#:import images_path kivymd.images_path
+
+
+<CustomOneLineIconListItem>
+
+    IconLeftWidget:
+        icon: root.icon
+
+
+<PreviousMDIcons>
+
+    MDBoxLayout:
+        orientation: 'vertical'
+        spacing: dp(10)
+        padding: dp(20)
+
+        MDBoxLayout:
+            adaptive_height: True
+
+            MDIconButton:
+                icon: 'magnify'
+
+            MDTextField:
+                id: search_field
+                hint_text: 'Search icon'
+                on_text: root.set_list_md_icons(self.text, True)
+
+        RecycleView:
+            id: rv
+            key_viewclass: 'viewclass'
+            key_size: 'height'
+
+            RecycleBoxLayout:
+                padding: dp(10)
+                default_size: None, dp(48)
+                default_size_hint: 1, None
+                size_hint_y: None
+                height: self.minimum_height
+                orientation: 'vertical'
+'''
+)
+
+
+class CustomOneLineIconListItem(OneLineIconListItem):
+    icon = StringProperty()
+
+
+class PreviousMDIcons(Screen):
+
+    def set_list_md_icons(self, text="", search=False):
+        '''Builds a list of icons for the screen MDIcons.'''
+
+        def add_icon_item(name_icon):
+            self.ids.rv.data.append(
+                {
+                    "viewclass": "CustomOneLineIconListItem",
+                    "icon": name_icon,
+                    "text": name_icon,
+                    "callback": lambda x: x,
+                }
+            )
+
+        self.ids.rv.data = []
+        for name_icon in md_icons.keys():
+            if search:
+                if text in name_icon:
+                    add_icon_item(name_icon)
+            else:
+                add_icon_item(name_icon)
+
+
+class MainApp(MDApp):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.screen = PreviousMDIcons()
+
     def build(self):
-        self.file_manager = MDFileManager(
-            exit_manager=self.exit_manager,
-            select_path=self.select_path,
-            previous=True,
-        )
-        screen = Builder.load_string(KV)
-        screen.ids.choose_file_button.bind(on_release=self.show_file_manager)
-        return screen
+        return self.screen
 
-    def show_file_manager(self, instance):
-        self.file_manager.show('/')
-
-    def select_path(self, path):
-        with open(path, 'r') as file:
-            data = file.read()
-            print(data)
-
-    def exit_manager(self, *args):
-        self.file_manager.close()
+    def on_start(self):
+        self.screen.set_list_md_icons()
 
 
-if __name__ == "__main__":
-    MyApp().run()
+MainApp().run()

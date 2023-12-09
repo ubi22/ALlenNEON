@@ -18,6 +18,10 @@ from kivymd.uix.filemanager import MDFileManager
 from kivymd.toast import toast
 Window.size = (480, 800)
 
+LabelBase.register(name='text',
+                      fn_regular='Style/ba.ttf')
+LabelBase.register(name='text_double',
+                      fn_regular='Style/Mikar.ttf')
 class FileManagerLayout(BoxLayout):
     pass
 class Wallet(MDApp):
@@ -44,8 +48,18 @@ class Wallet(MDApp):
     def file_manager_open(self, file):
         self.manager_open = True
         self.file_manager.show(os.path.expanduser("D:/"))
+    def login_using_password(self):
+        self.screen('main_screen')
 
+    def sign_in_enter_using_password(self):
+        self.screen('main_screen')
 
+    def login_account(self):
+        pass
+
+    def create_account(self):
+        self.screen('create_account_enter_password')
+        open('file.dat', 'w')
 
     def select_path(self, path):
         '''It will be called when you click on the file name
@@ -78,10 +92,21 @@ class Wallet(MDApp):
     def upload_pem(self):
         pass
 
+    def second_or_first_login(self):
+        if os.path.isfile("file.dat"):
+            self.screen('second_login')
+
     def build(self):
         self.theme_cls.theme_style = "Dark"
         self.theme_cls.primary_palette = "Orange"
         self.theme_cls.material_style = "M3"
-        return Builder.load_file("kivy.kv")
+        # self.root.current = 'second_login'
+        sm = Builder.load_file("kivy.kv")
+        if os.path.isfile("file.dat"):
+            sm.current = "login_account_enter_password"
+        return sm
+
+
+
 
 Wallet().run()

@@ -1,26 +1,83 @@
 ScreenManager:
     id: screen_manager
     Screen:
-        name: "home"
-        MDTextButton:
+        name: "first_login"
+        MDLabel:
             text: 'Войти'
             pos_hint: {"center_x": .5, "center_y": .85}
             font_size: '40sp'
+            halign: "center"
+            font_style: 'H1'
         MDTextField:
+            id: seed_text
             hint_text: "Введите сид фразу(12 слов)"
             mode: "rectangle"
-            pos_hint: {"center_x": .5, "center_y": .7}
-            size_hint: .85, .08
-        MDFloaButton:
-            id: download_pem
-            text: "Загрузить из .pem файла"
-            on_release: app.file_manager_open('D:/')
             pos_hint: {"center_x": .5, "center_y": .6}
+            size_hint: .8, .08
         MDRaisedButton:
-
-#    Screen:
-#        name: "file_pem"
-#        FileManagerLayout:
-#            orientation: 'vertical'
-#            FileChooserListView:
-#                id: file_chooser
+            id: download_pem
+            text: ".pem"
+            on_release: app.file_manager_open('D:/')
+            pos_hint: {"center_x": .5, "center_y": .5}
+            size_hint: .01, .07
+        MDFillRoundFlatIconButton:
+            icon: "login"
+            text: "Войти"
+            pos_hint: {"center_x": .5, "center_y": .35}
+            on_release: app.login_account()
+        MDFlatButton:
+            text: 'Создать аккаунт'
+            pos_hint: {"center_x": .5, "center_y": .30}
+            on_release: app.create_account()
+    Screen:
+        name: "login_account_enter_password"
+        MDCard:
+            size_hint: .8, .88
+            pos_hint: {"center_x": .5, "center_y": .5}
+            elevation: 6
+            orientation: "vertical"
+            MDFloatLayout:
+                Label:
+                    text: "Введите пороль"
+                    font_size: "35sp"
+                    pos_hint: {"center_x": .5, "center_y": .85}
+                MDTextField:
+                    id: password
+                    mode: "rectangle"
+                    size_hint: .85, .09
+                    width: "400dp"
+                    hint_text: "Пароль"
+                    pos_hint: {"center_x": .5, "center_y": .6}
+                MDRaisedButton:
+                    text: "Войти"
+                    text_size: "39sp"
+                    pos_hint: {"center_x": .5, "center_y": .315}
+                    on_release:
+                        app.sign_in_enter_using_password()
+    Screen:
+        name: 'create_account_enter_password'
+        MDCard:
+            size_hint: .8, .88
+            pos_hint: {"center_x": .5, "center_y": .5}
+            elevation: 6
+            orientation: "vertical"
+            MDFloatLayout:
+                Label:
+                    text: "Создай, пороль \nдля следущего входа"
+                    font_size: "35sp"
+                    pos_hint: {"center_x": .5, "center_y": .85}
+                MDTextField:
+                    id: password
+                    mode: "rectangle"
+                    size_hint: .85, .09
+                    width: "400dp"
+                    hint_text: "Пароль"
+                    pos_hint: {"center_x": .5, "center_y": .6}
+                MDRaisedButton:
+                    text: "Установить"
+                    text_size: "39sp"
+                    pos_hint: {"center_x": .5, "center_y": .315}
+                    on_release:
+                        app.login_using_password()
+    Screen:
+        name: 'main_screen'
