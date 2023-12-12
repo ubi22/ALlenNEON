@@ -6,8 +6,10 @@ from kivymd.uix.card import MDCard
 from kivy.animation import Animation
 from kivymd.app import MDApp
 from kivy.lang.builder import Builder
+from kivymd.uix.tab import MDTabsBase
 import requests
 import sqlite3
+from kivymd.uix.floatlayout import MDFloatLayout
 import os
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -22,8 +24,12 @@ LabelBase.register(name='text',
                       fn_regular='Style/ba.ttf')
 LabelBase.register(name='text_double',
                       fn_regular='Style/Mikar.ttf')
-class FileManagerLayout(BoxLayout):
-    pass
+
+
+class Tab(MDFloatLayout, MDTabsBase):
+    '''Class implementing content for a tab.'''
+
+
 class Wallet(MDApp):
     # def open_file(self):
     #     self.screen('file_pem')
@@ -91,10 +97,6 @@ class Wallet(MDApp):
 
     def upload_pem(self):
         pass
-
-    def second_or_first_login(self):
-        if os.path.isfile("file.dat"):
-            self.screen('second_login')
 
     def build(self):
         self.theme_cls.theme_style = "Dark"

@@ -1,3 +1,9 @@
+<Tab>
+
+    MDLabel:
+        id: label
+        text: "Tab 0"
+        halign: "center"
 ScreenManager:
     id: screen_manager
     Screen:
@@ -81,3 +87,20 @@ ScreenManager:
                         app.login_using_password()
     Screen:
         name: 'main_screen'
+        MDBoxLayout:
+            orientation: "vertical"
+            MDTopAppBar:
+                title: "Example Tabs"
+                halign: 'center'
+                font_style: 'H3'
+                font_size: '64sp'
+            MDTabs:
+                Tab:
+                    title: "Токены"
+                    halign: 'center'
+                Tab:
+                    title: "NFT"
+                    halign: 'center'
+                Tab:
+                    title: "APPS"
+                    halign: 'center'
