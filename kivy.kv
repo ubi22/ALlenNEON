@@ -1,8 +1,7 @@
 <Tab>
-
+    id: tab
     MDLabel:
-        id: label
-        text: "Tab 0"
+        text: tab.title
         halign: "center"
 ScreenManager:
     id: screen_manager
@@ -35,6 +34,7 @@ ScreenManager:
             text: 'Создать аккаунт'
             pos_hint: {"center_x": .5, "center_y": .30}
             on_release: app.create_account()
+
     Screen:
         name: "login_account_enter_password"
         MDCard:
@@ -48,7 +48,7 @@ ScreenManager:
                     font_size: "35sp"
                     pos_hint: {"center_x": .5, "center_y": .85}
                 MDTextField:
-                    id: password
+                    id: password_sig_in
                     mode: "rectangle"
                     size_hint: .85, .09
                     width: "400dp"
@@ -73,7 +73,7 @@ ScreenManager:
                     font_size: "35sp"
                     pos_hint: {"center_x": .5, "center_y": .85}
                 MDTextField:
-                    id: password
+                    id: password_login
                     mode: "rectangle"
                     size_hint: .85, .09
                     width: "400dp"
@@ -97,10 +97,9 @@ ScreenManager:
             MDTabs:
                 Tab:
                     title: "Токены"
-                    halign: 'center'
+
                 Tab:
                     title: "NFT"
-                    halign: 'center'
+
                 Tab:
                     title: "APPS"
-                    halign: 'center'

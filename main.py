@@ -9,6 +9,7 @@ from kivy.lang.builder import Builder
 from kivymd.uix.tab import MDTabsBase
 import requests
 import sqlite3
+import hashlib
 from kivymd.uix.floatlayout import MDFloatLayout
 import os
 from kivy.uix.boxlayout import BoxLayout
@@ -56,16 +57,31 @@ class Wallet(MDApp):
         self.file_manager.show(os.path.expanduser("D:/"))
     def login_using_password(self):
         self.screen('main_screen')
+        with open("file.dat", "w") as myfile:
+            a = self.root.ids.password_login.text
+            hashed_string = hashlib.sha256(a.encode('utf-8')).hexdigest()
+            myfile.write(f"{hashed_string}")
+            myfile.close()
 
     def sign_in_enter_using_password(self):
-        self.screen('main_screen')
+        with open("file.dat", "r") as myfile:
+            set = myfile.readline()
+            set1 = self.root.ids.password_sig_in.text
+            a = hashlib.sha256(set1.encode('utf-8')).hexdigest()
+            print(set)
+            print(a)
+            if a == set:
+                print(set)
+                self.screen('main_screen')
+            else:
+                toast('Пороль не правильный')
+
 
     def login_account(self):
-        pass
+        self.screen('create_account_enter_password')
 
     def create_account(self):
         self.screen('create_account_enter_password')
-        open('file.dat', 'w')
 
     def select_path(self, path):
         '''It will be called when you click on the file name
