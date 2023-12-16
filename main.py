@@ -10,6 +10,9 @@ from kivymd.uix.tab import MDTabsBase
 import requests
 import sqlite3
 import hashlib
+from Crypto.Cipher import AES
+from Crypto import Random
+import hashlib
 from kivymd.uix.floatlayout import MDFloatLayout
 import os
 from kivy.uix.boxlayout import BoxLayout
@@ -20,12 +23,6 @@ from kivy.core.text import LabelBase
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.toast import toast
 Window.size = (480, 800)
-
-LabelBase.register(name='text',
-                      fn_regular='Style/ba.ttf')
-LabelBase.register(name='text_double',
-                      fn_regular='Style/Mikar.ttf')
-
 
 class Tab(MDFloatLayout, MDTabsBase):
     '''Class implementing content for a tab.'''
@@ -50,6 +47,42 @@ class Wallet(MDApp):
         )
         self.file_manager.ext = [".txt"]
 
+    def pad(self, s):
+        return s + (16 - len(s) % 16) * chr(16 - len(s) % 16)
+
+    def undo_pad(self, s):
+        return s[:-ord(s[len(s) - 1:])]
+
+    def encrypt_text(self, text, password):
+        """
+        :param text:
+        данные которые надо зашифоровать(это будет сид фраза)
+        :param password:
+        пароль пользователя
+        :return:
+        зашифрованый текст
+        """
+        key = hashlib.sha256(password.encode('utf-8')).digest()
+        iv = Random.new().read(AES.block_size)
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        encrypted_text = iv + cipher.encrypt(self.pad(text).encode('utf-8'))
+        return encrypted_text
+
+    def decrypt_text(self, encrypted_text, password):
+        """
+
+        :param encrypted_text:
+        зашифорованый текст
+        :param password:
+        пароль
+        :return:
+        расшифрованый текст(это будет сид фраза)
+        """
+        key = hashlib.sha256(password.encode('utf-8')).digest()
+        iv = encrypted_text[:AES.block_size]
+        cipher = AES.new(key, AES.MODE_CBC, iv)
+        decrypted_text = self.undo_pad(cipher.decrypt(encrypted_text[AES.block_size:]))
+        return decrypted_text.decode('utf-8')
     def screen(self, screen_name):
         self.root.current = screen_name
     def file_manager_open(self, file):
@@ -57,24 +90,30 @@ class Wallet(MDApp):
         self.file_manager.show(os.path.expanduser("D:/"))
     def login_using_password(self):
         self.screen('main_screen')
+        text = self.root.ids.seed_text.text
+        password = self.root.ids.password_login.text
+        encrypted_text = self.encrypt_text(text, password)
         with open("file.dat", "w") as myfile:
-            a = self.root.ids.password_login.text
-            hashed_string = hashlib.sha256(a.encode('utf-8')).hexdigest()
-            myfile.write(f"{hashed_string}")
-            myfile.close()
+            myfile.write(f"{encrypted_text}")
+        # with open("file.dat", "w") as myfile:
+        #     a = self.root.ids.password_login.text
+        #     hashed_string = hashlib.sha256(a.encode('utf-8')).hexdigest()
+        #     myfile.write(f"{hashed_string}")
+        #     myfile.close()
 
     def sign_in_enter_using_password(self):
-        with open("file.dat", "r") as myfile:
-            set = myfile.readline()
-            set1 = self.root.ids.password_sig_in.text
-            a = hashlib.sha256(set1.encode('utf-8')).hexdigest()
-            print(set)
-            print(a)
-            if a == set:
-                print(set)
-                self.screen('main_screen')
-            else:
-                toast('Пороль не правильный')
+        pass
+        # with open("file.dat", "r") as myfile:
+        #     set = myfile.readline()
+        #     set1 = self.root.ids.password_sig_in.text
+        #     a = hashlib.sha256(set1.encode('utf-8')).hexdigest()
+        #     print(set)
+        #     print(a)
+        #     if a == set:
+        #         print(set)
+        #         self.screen('main_screen')
+        #     else:
+        #         toast('Пороль не правильный')
 
 
     def login_account(self):
