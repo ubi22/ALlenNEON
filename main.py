@@ -13,6 +13,9 @@ import hashlib
 from Crypto.Cipher import AES
 from Crypto import Random
 import hashlib
+from kivy.lang import Builder
+from kivymd.app import MDApp
+from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.floatlayout import MDFloatLayout
 import os
 from kivy.uix.boxlayout import BoxLayout
@@ -53,48 +56,21 @@ class Wallet(MDApp):
     def undo_pad(self, s):
         return s[:-ord(s[len(s) - 1:])]
 
-    def encrypt_text(self, text, password):
-        """
-        :param text:
-        данные которые надо зашифоровать(это будет сид фраза)
-        :param password:
-        пароль пользователя
-        :return:
-        зашифрованый текст
-        """
-        key = hashlib.sha256(password.encode('utf-8')).digest()
-        iv = Random.new().read(AES.block_size)
-        cipher = AES.new(key, AES.MODE_CBC, iv)
-        encrypted_text = iv + cipher.encrypt(self.pad(text).encode('utf-8'))
-        return encrypted_text
-
-    def decrypt_text(self, encrypted_text, password):
-        """
-
-        :param encrypted_text:
-        зашифорованый текст
-        :param password:
-        пароль
-        :return:
-        расшифрованый текст(это будет сид фраза)
-        """
-        key = hashlib.sha256(password.encode('utf-8')).digest()
-        iv = encrypted_text[:AES.block_size]
-        cipher = AES.new(key, AES.MODE_CBC, iv)
-        decrypted_text = self.undo_pad(cipher.decrypt(encrypted_text[AES.block_size:]))
-        return decrypted_text.decode('utf-8')
     def screen(self, screen_name):
         self.root.current = screen_name
+
     def file_manager_open(self, file):
         self.manager_open = True
         self.file_manager.show(os.path.expanduser("D:/"))
+
     def login_using_password(self):
         self.screen('main_screen')
-        text = self.root.ids.seed_text.text
-        password = self.root.ids.password_login.text
-        encrypted_text = self.encrypt_text(text, password)
-        with open("file.dat", "w") as myfile:
-            myfile.write(f"{encrypted_text}")
+        # self.screen('main_screen')
+        # text = self.root.ids.seed_text.text
+        # password = self.root.ids.password_login.text
+        # encrypted_text = self.encrypt_text(password, text)
+        # with open("file.txt", "w") as myfile:
+        #     myfile.write(f"{encrypted_text}")
         # with open("file.dat", "w") as myfile:
         #     a = self.root.ids.password_login.text
         #     hashed_string = hashlib.sha256(a.encode('utf-8')).hexdigest()
@@ -102,7 +78,14 @@ class Wallet(MDApp):
         #     myfile.close()
 
     def sign_in_enter_using_password(self):
-        pass
+        self.screen('main_screen')
+        # with open("file.txt", "r") as myfile:
+        #     password_sig_in = self.root.ids.password_sig_in.text
+        #     a = codecs.decode(myfile.read())
+        #     print(a)
+        #     s = self.decrypt_text(a, password_sig_in)
+        #     print(s)
+
         # with open("file.dat", "r") as myfile:
         #     set = myfile.readline()
         #     set1 = self.root.ids.password_sig_in.text
@@ -114,7 +97,6 @@ class Wallet(MDApp):
         #         self.screen('main_screen')
         #     else:
         #         toast('Пороль не правильный')
-
 
     def login_account(self):
         self.screen('create_account_enter_password')
@@ -149,7 +131,6 @@ class Wallet(MDApp):
                 self.file_manager.back()
         return True
 
-
     def upload_pem(self):
         pass
 
@@ -159,11 +140,8 @@ class Wallet(MDApp):
         self.theme_cls.material_style = "M3"
         # self.root.current = 'second_login'
         sm = Builder.load_file("kivy.kv")
-        if os.path.isfile("file.dat"):
+        if os.path.isfile("file.txt"):
             sm.current = "login_account_enter_password"
         return sm
-
-
-
 
 Wallet().run()

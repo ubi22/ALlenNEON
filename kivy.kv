@@ -87,19 +87,30 @@ ScreenManager:
                         app.login_using_password()
     Screen:
         name: 'main_screen'
-        MDBoxLayout:
-            orientation: "vertical"
-            MDTopAppBar:
-                title: "Example Tabs"
-                halign: 'center'
-                font_style: 'H3'
-                font_size: '64sp'
+        BoxLayout:
+            orientation: 'vertical'
+            MDFlatButton:
+                text: '0,00 NEON'
+                font_size: '40sp'
+                pos_hint: {'center_x': .5}
+            MDFloatLayout:
+                MDIconButton:
+                    icon: 'send'
+                    pos_hint: {'center_x': .35, 'center_y': .7}
+                MDIconButton:
+                    icon: 'send'
+                    pos_hint: {'center_x': .5, 'center_y': .7}
+                MDIconButton:
+                    icon: 'send'
+                    pos_hint: {'center_x': .65, 'center_y': .7}
             MDTabs:
+                id: tabs
+                Tab:
+                    title: "     "
                 Tab:
                     title: "Токены"
-
                 Tab:
                     title: "NFT"
-
                 Tab:
-                    title: "APPS"
+                    title: "Активность"
+
