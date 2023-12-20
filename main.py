@@ -7,13 +7,21 @@ from kivy.core.window import Window
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.toast import toast
 import pyperclip
+from kivymd.uix.button import MDFlatButton
+from kivymd.uix.dialog import MDDialog
+from kivymd.uix.boxlayout import MDBoxLayout
+from kivymd.uix.textfield import MDTextField
+from kivymd.uix.card import MDCard
 Window.size = (480, 800)
 
 class Tab(MDFloatLayout, MDTabsBase):
     '''Class implementing content for a tab.'''
-
+class Content(MDBoxLayout):
+    pass
 
 class Wallet(MDApp):
+
+
     # def open_file(self):
     #     self.screen('file_pem')
     #     selected_file = self.root.ids.file_chooser.selection and self.root.ids.file_chooser.selection[0]
@@ -31,6 +39,8 @@ class Wallet(MDApp):
             preview=True
         )
         self.file_manager.ext = [".txt"]
+        self.dialog_send = None
+        self.dialog_staking = None
 
     def copy(self):
         self
@@ -62,6 +72,44 @@ class Wallet(MDApp):
         #     myfile.write(f"{hashed_string}")
         #     myfile.close()
 
+    def show_confirmation_dialog(self):
+        if not self.dialog_send:
+            self.dialog_send = MDDialog(
+                title="Address:",
+                type="custom",
+                content_cls=Content(),
+                buttons=[
+                    MDFlatButton(
+                        text="Отмена",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=lambda x: self.dialog_close('dialog_send'),
+                    ),
+                    MDFlatButton(
+                        text="Отправить",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=self.send,
+                    ),
+                ],
+            )
+        self.dialog_send.open()
+
+    def staking_dialog(self):
+        if not self.dialog_staking:
+            self.dialog_staking = MDDialog(
+                title="10 NEON",
+                type="custom",
+                buttons=[
+                    MDFlatButton(
+                        text="Ок",
+                        theme_text_color="Custom",
+                        text_color=self.theme_cls.primary_color,
+                        on_release=lambda x: self.dialog_close('dialog_staking'),
+                    ),
+                ],
+            )
+        self.dialog_staking.open()
     def sign_in_enter_using_password(self):
         self.screen('main_screen')
         self.root.ids.tabs.switch_tab(2)
@@ -132,5 +180,13 @@ class Wallet(MDApp):
 
     def copy_button_text(self):
         pyperclip.copy(self.root.ids.user_id.text)
+
+    def dialog_close(self, a):
+        print(a)
+        eval(f"self.{a}.dismiss()")
+
+    def send(self, wtf):
+        print(wtf)
+
 
 Wallet().run()

@@ -1,9 +1,26 @@
 <Tab>
     id: tab
     MDLabel:
-        text: tab.title
+        text: "Тут пока, что ничего нет :("
         halign: "center"
 <TooltipMDIconButton@MDFloatingActionButton+MDTooltip>
+<Content>
+    orientation: "vertical"
+    spacing: "12dp"
+    size_hint_y: None
+    height: "120dp"
+
+    MDTextField:
+        hint_text: "Кому"
+        mode: "fill"
+    MDTextField:
+        mode: "fill"
+        hint_text: "Сколько"
+        text: '0'
+        input_filter: 'float'
+    MDTextField:
+        hint_text: "Сообщение"
+        mode: "fill"
 ScreenManager:
     id: screen_manager
     Screen:
@@ -60,7 +77,7 @@ ScreenManager:
                     text_size: "39sp"
                     pos_hint: {"center_x": .5, "center_y": .315}
                     on_release:
-                        app.sign_in_enter_using_password()
+                        app.v()
     Screen:
         name: 'create_account_enter_password'
         MDCard:
@@ -90,6 +107,8 @@ ScreenManager:
         name: 'main_screen'
         BoxLayout:
             orientation: 'vertical'
+            MDFlatButton:
+                text: '        '
             MDRoundFlatIconButton:
                 text: '0xXyiG456adaLDakcad56FFFl'
                 icon: 'content-copy'
@@ -98,32 +117,32 @@ ScreenManager:
                 on_release:
                     app.copy_button_text()
             MDFlatButton:
+                text: '        '
+            MDFlatButton:
                 id: balance_user
-                text: '0,00 NEON'
+                text: '0.00 NEON'
                 font_size: '40sp'
                 pos_hint: {'center_x': .5}
             MDFloatLayout:
+                size_hint: 1, .4
                 TooltipMDIconButton:
                     icon: 'send'
                     tooltip_text: 'Отправить'
                     pos_hint: {'center_x': .3, 'center_y': .7}
+                    on_release: app.show_confirmation_dialog()
                 TooltipMDIconButton:
                     icon: 'safe'
                     tooltip_text: "Стейкинг"
-                    pos_hint: {'center_x': .3, 'center_y': .7}
+                    pos_hint: {'center_x': .5, 'center_y': .7}
+                    on_release: app.staking_dialog()
                 TooltipMDIconButton:
-                    icon: 'safe'
-                    tooltip_text: "СмартКонтракт"
-                    pos_hint: {'center_x': .3, 'center_y': .7}
+                    icon: 'script-text-outline'
+                    tooltip_text: "Создать СмартКонтракт"
+                    pos_hint: {'center_x': .7, 'center_y': .7}
             MDTabs:
                 id: tabs
                 Tab:
                     title: "Токены"
-                    size_hint_x: 1
+
                 Tab:
                     title: "NFT"
-                    size_hint_x: 1
-                Tab:
-                    title: "Активность"
-                    size_hint_x: 1
-
