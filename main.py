@@ -1,30 +1,12 @@
-import json
-import hashlib
-from kivymd.uix.boxlayout import MDBoxLayout
-from kivymd.uix.label import MDLabel
-from kivymd.uix.card import MDCard
-from kivy.animation import Animation
-from kivymd.app import MDApp
-from kivy.lang.builder import Builder
-from kivymd.uix.tab import MDTabsBase
-import requests
-import sqlite3
-import hashlib
-from Crypto.Cipher import AES
-from Crypto import Random
-import hashlib
 from kivy.lang import Builder
 from kivymd.app import MDApp
 from kivymd.uix.tab import MDTabsBase
 from kivymd.uix.floatlayout import MDFloatLayout
 import os
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
-from kivy.uix.filechooser import FileChooserListView
 from kivy.core.window import Window
-from kivy.core.text import LabelBase
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.toast import toast
+import pyperclip
 Window.size = (480, 800)
 
 class Tab(MDFloatLayout, MDTabsBase):
@@ -49,6 +31,9 @@ class Wallet(MDApp):
             preview=True
         )
         self.file_manager.ext = [".txt"]
+
+    def copy(self):
+        self
 
     def pad(self, s):
         return s + (16 - len(s) % 16) * chr(16 - len(s) % 16)
@@ -79,6 +64,7 @@ class Wallet(MDApp):
 
     def sign_in_enter_using_password(self):
         self.screen('main_screen')
+        self.root.ids.tabs.switch_tab(2)
         # with open("file.txt", "r") as myfile:
         #     password_sig_in = self.root.ids.password_sig_in.text
         #     a = codecs.decode(myfile.read())
@@ -143,5 +129,8 @@ class Wallet(MDApp):
         if os.path.isfile("file.txt"):
             sm.current = "login_account_enter_password"
         return sm
+
+    def copy_button_text(self):
+        pyperclip.copy(self.root.ids.user_id.text)
 
 Wallet().run()

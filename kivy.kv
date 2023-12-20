@@ -3,6 +3,7 @@
     MDLabel:
         text: tab.title
         halign: "center"
+<TooltipMDIconButton@MDFloatingActionButton+MDTooltip>
 ScreenManager:
     id: screen_manager
     Screen:
@@ -89,28 +90,40 @@ ScreenManager:
         name: 'main_screen'
         BoxLayout:
             orientation: 'vertical'
+            MDRoundFlatIconButton:
+                text: '0xXyiG456adaLDakcad56FFFl'
+                icon: 'content-copy'
+                pos_hint: {'center_x': .5}
+                id: user_id
+                on_release:
+                    app.copy_button_text()
             MDFlatButton:
+                id: balance_user
                 text: '0,00 NEON'
                 font_size: '40sp'
                 pos_hint: {'center_x': .5}
             MDFloatLayout:
-                MDIconButton:
+                TooltipMDIconButton:
                     icon: 'send'
-                    pos_hint: {'center_x': .35, 'center_y': .7}
-                MDIconButton:
-                    icon: 'send'
-                    pos_hint: {'center_x': .5, 'center_y': .7}
-                MDIconButton:
-                    icon: 'send'
-                    pos_hint: {'center_x': .65, 'center_y': .7}
+                    tooltip_text: 'Отправить'
+                    pos_hint: {'center_x': .3, 'center_y': .7}
+                TooltipMDIconButton:
+                    icon: 'safe'
+                    tooltip_text: "Стейкинг"
+                    pos_hint: {'center_x': .3, 'center_y': .7}
+                TooltipMDIconButton:
+                    icon: 'safe'
+                    tooltip_text: "СмартКонтракт"
+                    pos_hint: {'center_x': .3, 'center_y': .7}
             MDTabs:
                 id: tabs
                 Tab:
-                    title: "     "
-                Tab:
                     title: "Токены"
+                    size_hint_x: 1
                 Tab:
                     title: "NFT"
+                    size_hint_x: 1
                 Tab:
                     title: "Активность"
+                    size_hint_x: 1
 
